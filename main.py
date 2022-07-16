@@ -18,19 +18,16 @@ def repo_link_finder(url):
         for ext in code_extensions:
             if ext in str(hyperlink_tags) and not (".com" in str(hyperlink_tags)):
                 python_file_links.append(str(hyperlink_tags))
-    for a in python_file_links:
-        print(a)
-    link = list()
-    link_1 = " "
+    code_links = list()
     for a_tag in python_file_links:
         split_a_tag = a_tag.split(' ')
         for href in split_a_tag:
-            # print(href)
             if href[0:4] == "href":
                 link_1 = href[6:-1]
-
-
-        print(link_1)
+                for ext in code_extensions:
+                    if ext in link_1:
+                        code_links.append(link_1)
+    return code_links
 
 
 repo_link = "https://github.com/kartikbind/Day_2_Tip_Calculators"
