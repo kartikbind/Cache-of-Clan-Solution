@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def repo_link_finder(url):
+def code_link_finder(url):
     req = requests.get(url)
     repo_link_protocol = url[:8]
     # print(repo_link_protocol)
@@ -26,9 +26,34 @@ def repo_link_finder(url):
                 link_1 = href[6:-1]
                 for ext in code_extensions:
                     if ext in link_1:
-                        code_links.append(link_1)
+                        code_links.append(repo_link_protocol + domain_name + link_1)
     return code_links
 
 
+def open_code(code_link_list: list):
+    for code_link in code_link_list:
+        req = requests.get(code_link)
+        soup = BeautifulSoup(req.content, "html.parser")
+        code = soup.text
+        code_1 = code.split('\n')
+        code_2 = [ele for ele in code_1 if ele.strip()]
+        program = []
+        for i in range(len(code_2)):
+            # print(code_2[i])
+            found = 0
+            if "View blame" in code_2[i]:
+                found = True
+            while found:
+                if "Copy lines" in code_2[i]:
+                    found = False
+                program.append(code_2[i])
+                i = i + 1
+        program.remove("                View blame")
+        program.remove("            Copy lines")
+        for txt in program:
+            print(txt)
+
+
 repo_link = "https://github.com/kartikbind/Day_2_Tip_Calculators"
-repo_link_finder(repo_link)
+# print(code_link_finder(repo_link))
+open_code(code_link_finder(repo_link))
