@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import tkinter
+from PIL import Image, ImageTk
 
 
 def code_link_finder(url):
@@ -54,6 +56,18 @@ def open_code(code_link_list: list):
             print(txt)
 
 
-repo_link = "https://github.com/kartikbind/Day_2_Tip_Calculators"
+# repo_link = "https://github.com/kartikbind/Day_2_Tip_Calculators"
 # print(code_link_finder(repo_link))
-open_code(code_link_finder(repo_link))
+# open_code(code_link_finder(repo_link))
+window = tkinter.Tk()
+window.geometry("600x400")
+canvas_1 = tkinter.Canvas(window)
+canvas_1.grid(columnspan=3)
+
+pic = Image.open('Profile Pic.jpg')
+pic = ImageTk.PhotoImage(pic)
+pic_label = tkinter.Label(image=pic)
+pic_label.image = pic
+pic_label.grid(column=1, row=0)
+
+window.mainloop()
