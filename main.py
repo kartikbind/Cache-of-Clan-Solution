@@ -66,13 +66,11 @@ def sumit_func():
     text_box.grid(column=1, row=6)
 
 
-def temp_text(e):
+def temp_text(a):
     url_label.delete(0, "end")
 
 
-# repo_link = "https://github.com/kartikbind/Day_2_Tip_Calculators"
-# print(code_link_finder(repo_link))
-# open_code(code_link_finder(repo_link))
+# GUI for Program
 window = tkinter.Tk()
 window.geometry("900x700+300+150")
 window.title("Cache of Clan")
@@ -80,9 +78,11 @@ window.grid_columnconfigure(1, weight=1)
 
 input_repo_url = tkinter.StringVar()
 
+# Create a Canvas
 canvas_1 = tkinter.Canvas(window)
 canvas_1.grid(columnspan=3, rowspan=8)
 
+# Team Name
 team_name_label = tkinter.Label(window, text="Cache of Clan")
 team_name_label.grid(column=1, row=0)
 
@@ -95,18 +95,26 @@ pic_label.image = pic
 pic_label.grid(column=1, row=1)
 pic_label.columnconfigure(1, weight=2)
 
+# Welcome message
 welcome_label = tkinter.Label(window, text="Flipkart GRiD 4.0")
 welcome_label.grid(column=1, row=2)
 
+# URL Entry
 url_label = tkinter.Entry(window, textvariable=input_repo_url, width=50)
 url_label.insert(0, "Enter the URL of the repo")
 url_label.grid(column=1, row=4)
 url_label.bind("<FocusIn>", temp_text)
 
+# Submit Button
 sumit_button = tkinter.Button(window, text="Sumit", command=sumit_func)
-sumit_button.grid(column=2, row=4, sticky="W")
+sumit_button.grid(column=1, row=5)
 
+# Close Button
 close_button = tkinter.Button(window, text="Close", command=window.destroy)
-close_button.grid(column=1, row=7)
+close_button.grid(column=1, row=7, sticky="S")
 
 window.mainloop()
+
+# repo_link = "https://github.com/kartikbind/Day_2_Tip_Calculators"
+# print(code_link_finder(repo_link))
+# open_code(code_link_finder(repo_link))
