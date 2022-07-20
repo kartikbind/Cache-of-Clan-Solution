@@ -33,13 +33,13 @@ def code_link_finder(url):
 
 
 def open_code(code_link_list: list):
+    program = []
     for code_link in code_link_list:
         req = requests.get(code_link)
         soup = BeautifulSoup(req.content, "html.parser")
         code = soup.text
         code_1 = code.split('\n')
         code_2 = [ele for ele in code_1 if ele.strip()]
-        program = []
         for i in range(len(code_2)):
             # print(code_2[i])
             found = 0
@@ -52,22 +52,61 @@ def open_code(code_link_list: list):
                 i = i + 1
         program.remove("                View blame")
         program.remove("            Copy lines")
-        for txt in program:
-            print(txt)
+        # for txt in program:
+        #    print(txt)
+    return program
+
+
+def sumit_func():
+    url = input_repo_url.get()
+    code = open_code(code_link_finder(url))
+    text_box = tkinter.Text(window, height=20, width=100)
+    for i in range(len(code)):
+        text_box.insert(float(i+1), code[i]+'\n')
+    text_box.grid(column=1, row=6)
+
+
+def temp_text(e):
+    url_label.delete(0, "end")
 
 
 # repo_link = "https://github.com/kartikbind/Day_2_Tip_Calculators"
 # print(code_link_finder(repo_link))
 # open_code(code_link_finder(repo_link))
 window = tkinter.Tk()
-window.geometry("600x400")
-canvas_1 = tkinter.Canvas(window)
-canvas_1.grid(columnspan=3)
+window.geometry("900x700+300+150")
+window.title("Cache of Clan")
+window.grid_columnconfigure(1, weight=1)
 
+input_repo_url = tkinter.StringVar()
+
+canvas_1 = tkinter.Canvas(window)
+canvas_1.grid(columnspan=3, rowspan=8)
+
+team_name_label = tkinter.Label(window, text="Cache of Clan")
+team_name_label.grid(column=1, row=0)
+
+# Team Logo -> currently Kartik Profile Picture
 pic = Image.open('Profile Pic.jpg')
+pic = pic.resize((200, 200))
 pic = ImageTk.PhotoImage(pic)
 pic_label = tkinter.Label(image=pic)
 pic_label.image = pic
-pic_label.grid(column=1, row=0)
+pic_label.grid(column=1, row=1)
+pic_label.columnconfigure(1, weight=2)
+
+welcome_label = tkinter.Label(window, text="Flipkart GRiD 4.0")
+welcome_label.grid(column=1, row=2)
+
+url_label = tkinter.Entry(window, textvariable=input_repo_url, width=50)
+url_label.insert(0, "Enter the URL of the repo")
+url_label.grid(column=1, row=4)
+url_label.bind("<FocusIn>", temp_text)
+
+sumit_button = tkinter.Button(window, text="Sumit", command=sumit_func)
+sumit_button.grid(column=2, row=4, sticky="W")
+
+close_button = tkinter.Button(window, text="Close", command=window.destroy)
+close_button.grid(column=1, row=7)
 
 window.mainloop()
