@@ -57,61 +57,117 @@ def open_code(code_link_list: list):
     return program
 
 
-def sumit_func():
-    url = input_repo_url.get()
-    code = open_code(code_link_finder(url))
-    text_box = tkinter.Text(window, height=20, width=100)
+def clear_frame(frame):
+    for widgets in frame.winfo_children():
+        widgets.destroy()
+
+
+def sumit_func(frame, link):
+    code = open_code(code_link_finder(link))
+    clear_frame(frame)
+    text_box = tkinter.Text(frame, height=20, width=100)
     for i in range(len(code)):
         text_box.insert(float(i+1), code[i]+'\n')
-    text_box.grid(column=1, row=6)
+    text_box.grid(column=0, row=0)
 
 
-def temp_text(a):
-    url_label.delete(0, "end")
+def display_code(frame):
+    def temp_text(e):
+        url_entry.delete(0, "end")
+
+    clear_frame(frame)
+
+    # input URL variable
+    input_repo_url = tkinter.StringVar()
+    right_frame_3 = tkinter.Frame(frame)
+    right_frame_3.grid()
+    instruction_label = tkinter.Label(right_frame_3, text="To check for vulnerability in the Repo")
+    instruction_label.grid(row=0, columnspan=2)
+    github_link_label = tkinter.Label(right_frame_3, text="Enter the Repo link Below")
+    github_link_label.grid(row=1, column=0)
+    url_entry = tkinter.Entry(right_frame_3, textvariable=input_repo_url, width=50)
+    url_entry.insert(0, "Enter the Github URL of the Repo")
+    url_entry.grid(row=2, column=0)
+    url_entry.bind("<FocusIn>", temp_text)
+    submit_button = tkinter.Button(right_frame_3, text="Submit", command=lambda: sumit_func(frame, input_repo_url.get()))
+    submit_button.grid(row=2, column=2)
 
 
-# GUI for Program
 window = tkinter.Tk()
-window.geometry("900x700+300+150")
-window.title("Cache of Clan")
-window.grid_columnconfigure(1, weight=1)
+window.title("Flipkart GRiD 4.0")
 
-input_repo_url = tkinter.StringVar()
+# To find the center of the screen according to the app dimension
+app_width = 900
+app_height = 750
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+center_width = int((screen_width / 2) - (app_width / 2))
+center_height = int((screen_height / 2) - (app_height / 2))
 
-# Create a Canvas
-canvas_1 = tkinter.Canvas(window)
-canvas_1.grid(columnspan=3, rowspan=8)
+# To give geometry to the app
+window.geometry(f'{app_width}x{app_height}+{center_width}+{center_height}')
 
-# Team Name
+# Column width
+window.columnconfigure(0, weight=1)
+window.columnconfigure(1, weight=10)
+window.columnconfigure(2, weight=10)
+
+# Row width
+window.rowconfigure(0, weight=1)
+window.rowconfigure(1, weight=1)
+window.rowconfigure(2, weight=10)
+window.rowconfigure(3, weight=1)
+
+# Label for team name Cache of Clan
 team_name_label = tkinter.Label(window, text="Cache of Clan")
-team_name_label.grid(column=1, row=0)
+team_name_label.grid(columnspan=3, row=0, sticky="EW", padx=5, pady=1)
 
-# Team Logo -> currently Kartik Profile Picture
-pic = Image.open('Profile Pic.jpg')
-pic = pic.resize((200, 200))
+# Image of team
+pic = Image.open('Flipkart-GRiD-4.0.png')
+pic = pic.resize((360, 200))
 pic = ImageTk.PhotoImage(pic)
-pic_label = tkinter.Label(image=pic)
+pic_label = tkinter.Label(window, image=pic)
 pic_label.image = pic
-pic_label.grid(column=1, row=1)
-pic_label.columnconfigure(1, weight=2)
+pic_label.grid(row=1, columnspan=3)
 
-# Welcome message
-welcome_label = tkinter.Label(window, text="Flipkart GRiD 4.0")
-welcome_label.grid(column=1, row=2)
+# Left Menu
+left_menu_frame = tkinter.LabelFrame(window,text='Menu')
+left_menu_frame.grid(column=0, row=2, sticky='nsew')
 
-# URL Entry
-url_label = tkinter.Entry(window, textvariable=input_repo_url, width=50)
-url_label.insert(0, "Enter the URL of the repo")
-url_label.grid(column=1, row=4)
-url_label.bind("<FocusIn>", temp_text)
+# Left Menu Frame Column Configure
+left_menu_frame.columnconfigure(0, weight=1)
 
-# Submit Button
-sumit_button = tkinter.Button(window, text="Sumit", command=sumit_func)
-sumit_button.grid(column=1, row=5)
+# Right Frame
+right_frame = tkinter.Frame(window, bg='green')
+right_frame.grid(column=1, row=2, columnspan=2, sticky='nsew')
+
+# Right Frame Column Configure
+right_frame.columnconfigure(0, weight=1)
+
+# Right Frame Row Configure
+# right_frame.rowconfigure(0, weight=1) # it centering vertically
+
+# Buttons for Left Menu
+button_width = 20
+button_pad_x = 5
+check_repo_button = tkinter.Button(left_menu_frame, text="Check Repo", width=button_width, command=window.quit)
+check_repo_button.grid(padx=button_pad_x, pady=5)
+rate_repo_button = tkinter.Button(left_menu_frame, text="Rate Repo", width=button_width)
+rate_repo_button.grid(padx=button_pad_x, pady=5)
+add_vulnerabilities = tkinter.Button(left_menu_frame, text=" Add Vulnerable Syntax", width=button_width)
+add_vulnerabilities.grid(padx=button_pad_x, pady=5)
+display_code_button = tkinter.Button(left_menu_frame, text="Display Codes", width=button_width, command=lambda: display_code(right_frame))
+display_code_button.grid(padx=button_pad_x, pady=5)
+team_info = tkinter.Button(window, text="Team Information", width=button_width)
+team_info.grid(padx=button_pad_x, pady=5)
+
+# Welcome Label
+welcome_label = tkinter.Label(right_frame, text='Welcome to OSS Security Inspector', font=('Arial', 20), bg='green')
+welcome_label.grid(column=0, row=0, columnspan=1, sticky='ew')
 
 # Close Button
-close_button = tkinter.Button(window, text="Close", command=window.destroy)
-close_button.grid(column=1, row=7, sticky="S")
+close_button = tkinter.Button(window, text="Close", command=window.quit)
+close_button.grid(row=3, column=2, columnspan=2, sticky='e', padx=20)
 
 window.mainloop()
 
