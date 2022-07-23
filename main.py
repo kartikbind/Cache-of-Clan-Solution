@@ -75,7 +75,7 @@ def clear_frame(frame):
         widgets.destroy()
 
 
-def sumit_func(frame, link):
+def display_sumit_func(frame, link):
     code = open_code(code_link_finder(dir_link_finder(link)))
     clear_frame(frame)
     text_box = tkinter.Text(frame)
@@ -92,19 +92,27 @@ def display_code(frame):
 
     # input URL variable
     input_repo_url = tkinter.StringVar()
-    right_frame_3 = tkinter.Frame(frame)
-    right_frame_3.grid()
-    instruction_label = tkinter.Label(right_frame_3, text="To check for vulnerability in the Repo")
+
+    # Right frame for working palate
+    right_frame_display = tkinter.Frame(frame)
+    right_frame_display.grid(sticky='n')
+
+    # Right frame display frame column configure
+    right_frame_display.columnconfigure(0, weight=10)
+    right_frame_display.columnconfigure(1, weight=1)
+
+    # Instruction Label
+    instruction_label = tkinter.Label(right_frame_display, text="To check for vulnerability in the Repo")
     instruction_label.grid(row=0, columnspan=2)
-    github_link_label = tkinter.Label(right_frame_3, text="Enter the Repo link Below")
-    github_link_label.grid(row=1, column=0)
-    url_entry = tkinter.Entry(right_frame_3, textvariable=input_repo_url, width=50)
+    github_link_label = tkinter.Label(right_frame_display, text="Enter the Repo link Below")
+    github_link_label.grid(row=1, column=0, columnspan=2)
+    url_entry = tkinter.Entry(right_frame_display, textvariable=input_repo_url, width=50)
     url_entry.insert(0, "Enter the Github URL of the Repo")
     url_entry.grid(row=2, column=0)
     url_entry.bind("<FocusIn>", temp_text)
-    submit_button = tkinter.Button(right_frame_3, text="Submit",
-                                   command=lambda: sumit_func(frame, input_repo_url.get()))
-    submit_button.grid(row=2, column=2)
+    submit_button = tkinter.Button(right_frame_display, text="Submit", width=5,
+                                   command=lambda: display_sumit_func(frame, input_repo_url.get()))
+    submit_button.grid(row=2, column=1)
 
 
 window = tkinter.Tk()
