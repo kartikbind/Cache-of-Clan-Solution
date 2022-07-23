@@ -1,0 +1,3 @@
+('pymetasploit3', 'discovers hidden vulnerabilities', '3')
+('socket', 'port scanning and port sniffing', '3')
+('YARA', 'Malware identification', '2')
