@@ -4,31 +4,47 @@ import tkinter
 from PIL import Image, ImageTk
 
 
-def code_link_finder(url):
+def dir_link_finder(url):
+    dir_link_list = list()
+    dir_link_list.append(url)
     req = requests.get(url)
     repo_link_protocol = url[:8]
-    # print(repo_link_protocol)
     link_divide = url.split("/")
     domain_name = link_divide[2]
     soup = BeautifulSoup(req.content, "html.parser")
-    code_extensions = [".py", ".c++", ".java", "json", ".c"]
-
     all_hyperlink_tags = soup.find_all('a')
-    python_file_links = list()
-    for hyperlink_tags in all_hyperlink_tags:
-        # print(hyperlink_tags)
-        for ext in code_extensions:
-            if ext in str(hyperlink_tags) and not (".com" in str(hyperlink_tags)):
-                python_file_links.append(str(hyperlink_tags))
+    for hyper_link_tags in all_hyperlink_tags:
+        str_hyper_link_tag = str(hyper_link_tags)
+        if f'{link_divide[3]}/{link_divide[4]}/tree/master/' in str_hyper_link_tag:
+            split_file_tags = str_hyper_link_tag.split(' ')
+            for href in split_file_tags:
+                if href[0:4] == "href":
+                    link = href[6:-1]
+                    dir_link_list.append(repo_link_protocol + domain_name + link)
+    return dir_link_list
+
+
+def code_link_finder(url_list: list):
     code_links = list()
-    for a_tag in python_file_links:
-        split_a_tag = a_tag.split(' ')
-        for href in split_a_tag:
-            if href[0:4] == "href":
-                link_1 = href[6:-1]
-                for ext in code_extensions:
-                    if ext in link_1:
-                        code_links.append(repo_link_protocol + domain_name + link_1)
+    for url in url_list:
+        req = requests.get(url)
+        repo_link_protocol = url[:8]
+        link_divide = url.split("/")
+        domain_name = link_divide[2]
+        soup = BeautifulSoup(req.content, "html.parser")
+        code_extensions = [".py", ".c++", ".java", "json", ".c"]
+
+        all_hyperlink_tags = soup.find_all('a')
+        for hyperlink_tag in all_hyperlink_tags:
+            for ext in code_extensions:
+                str_hyperlink_tag = str(hyperlink_tag)
+                if ext in str_hyperlink_tag and not (".com" in str_hyperlink_tag):
+                    split_a_tag = str_hyperlink_tag.split(' ')
+                    for href in split_a_tag:
+                        if href[0:4] == "href":
+                            link_1 = href[6:-1]
+                            code_links.append(repo_link_protocol + domain_name + link_1)
+
     return code_links
 
 
@@ -38,10 +54,9 @@ def open_code(code_link_list: list):
         req = requests.get(code_link)
         soup = BeautifulSoup(req.content, "html.parser")
         code = soup.text
-        code_1 = code.split('\n')
-        code_2 = [ele for ele in code_1 if ele.strip()]
+        code_1 = code.split('\n')  # to ignore the '\n' char in the variable code
+        code_2 = [ele for ele in code_1 if ele.strip()]  # to ignore the empty or blank elements in variable code_1
         for i in range(len(code_2)):
-            # print(code_2[i])
             found = 0
             if "View blame" in code_2[i]:
                 found = True
@@ -52,8 +67,6 @@ def open_code(code_link_list: list):
                 i = i + 1
         program.remove("                View blame")
         program.remove("            Copy lines")
-        # for txt in program:
-        #    print(txt)
     return program
 
 
@@ -63,19 +76,19 @@ def clear_frame(frame):
 
 
 def sumit_func(frame, link):
-    code = open_code(code_link_finder(link))
+    code = open_code(code_link_finder(dir_link_finder(link)))
     clear_frame(frame)
-    text_box = tkinter.Text(frame, height=20, width=100)
+    text_box = tkinter.Text(frame)
     for i in range(len(code)):
-        text_box.insert(float(i+1), code[i]+'\n')
-    text_box.grid(column=0, row=0)
+        text_box.insert(float(i + 1), code[i] + '\n')
+    text_box.grid(column=0, row=0, sticky='nsew')
 
 
 def display_code(frame):
     def temp_text(e):
         url_entry.delete(0, "end")
 
-    clear_frame(frame)
+    clear_frame(frame)  # clear the widgets inside the frame
 
     # input URL variable
     input_repo_url = tkinter.StringVar()
@@ -89,7 +102,8 @@ def display_code(frame):
     url_entry.insert(0, "Enter the Github URL of the Repo")
     url_entry.grid(row=2, column=0)
     url_entry.bind("<FocusIn>", temp_text)
-    submit_button = tkinter.Button(right_frame_3, text="Submit", command=lambda: sumit_func(frame, input_repo_url.get()))
+    submit_button = tkinter.Button(right_frame_3, text="Submit",
+                                   command=lambda: sumit_func(frame, input_repo_url.get()))
     submit_button.grid(row=2, column=2)
 
 
@@ -131,21 +145,21 @@ pic_label.image = pic
 pic_label.grid(row=1, columnspan=3)
 
 # Left Menu
-left_menu_frame = tkinter.LabelFrame(window,text='Menu')
+left_menu_frame = tkinter.LabelFrame(window, text='Menu')
 left_menu_frame.grid(column=0, row=2, sticky='nsew')
 
 # Left Menu Frame Column Configure
 left_menu_frame.columnconfigure(0, weight=1)
 
 # Right Frame
-right_frame = tkinter.Frame(window, bg='green')
+right_frame = tkinter.Frame(window)
 right_frame.grid(column=1, row=2, columnspan=2, sticky='nsew')
 
 # Right Frame Column Configure
 right_frame.columnconfigure(0, weight=1)
 
 # Right Frame Row Configure
-# right_frame.rowconfigure(0, weight=1) # it centering vertically
+right_frame.rowconfigure(0, weight=1)  # it's centering widgets vertically
 
 # Buttons for Left Menu
 button_width = 20
@@ -156,13 +170,14 @@ rate_repo_button = tkinter.Button(left_menu_frame, text="Rate Repo", width=butto
 rate_repo_button.grid(padx=button_pad_x, pady=5)
 add_vulnerabilities = tkinter.Button(left_menu_frame, text=" Add Vulnerable Syntax", width=button_width)
 add_vulnerabilities.grid(padx=button_pad_x, pady=5)
-display_code_button = tkinter.Button(left_menu_frame, text="Display Codes", width=button_width, command=lambda: display_code(right_frame))
+display_code_button = tkinter.Button(left_menu_frame, text="Display Codes", width=button_width,
+                                     command=lambda: display_code(right_frame))
 display_code_button.grid(padx=button_pad_x, pady=5)
 team_info = tkinter.Button(window, text="Team Information", width=button_width)
 team_info.grid(padx=button_pad_x, pady=5)
 
 # Welcome Label
-welcome_label = tkinter.Label(right_frame, text='Welcome to OSS Security Inspector', font=('Arial', 20), bg='green')
+welcome_label = tkinter.Label(right_frame, text='Welcome to OSS Security Inspector', font=('Arial', 20))
 welcome_label.grid(column=0, row=0, columnspan=1, sticky='ew')
 
 # Close Button
@@ -170,7 +185,3 @@ close_button = tkinter.Button(window, text="Close", command=window.quit)
 close_button.grid(row=3, column=2, columnspan=2, sticky='e', padx=20)
 
 window.mainloop()
-
-# repo_link = "https://github.com/kartikbind/Day_2_Tip_Calculators"
-# print(code_link_finder(repo_link))
-# open_code(code_link_finder(repo_link))
