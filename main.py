@@ -115,6 +115,14 @@ def display_code(frame):
     submit_button.grid(row=2, column=1)
 
 
+def vul_submit_func(syn, des, rate, frame_1):
+    f = open("vulnerable_syntax.txt", "a")
+    f.write(str((syn.get(), des.get(), rate.get())))
+    f.write('\n')
+    f.close()
+    add_vulnerable_syntax(frame_1)
+
+
 def add_vulnerable_syntax(frame):
     def syn_temp_text(w):
         syntax_entry.delete(0, "end")
@@ -125,13 +133,6 @@ def add_vulnerable_syntax(frame):
     def rate_temp_text(w):
         danger_rating_entry.delete(0, "end")
 
-    def submit_func(a, b, c, frame_1):
-        f = open("vulnerable_syntax.txt", "a")
-        f.write(str((a, b, c)))
-        f.write('\n')
-        f.close()
-        add_vulnerable_syntax(frame_1)
-
     clear_frame(frame)
 
     # Entry Variable declaration
@@ -140,7 +141,7 @@ def add_vulnerable_syntax(frame):
     rate_syn = tkinter.StringVar()
 
     # right frame for adding widgets
-    right_frame = tkinter.Frame(frame)
+    right_frame = tkinter.Frame(frame, bg='green')
     right_frame.grid(sticky='nsew', padx=5)
 
     # right frame column Configuration
@@ -175,8 +176,10 @@ def add_vulnerable_syntax(frame):
     danger_rating_entry.grid(column=1, row=3, sticky='ew', padx=5, pady=5)
     danger_rating_entry.bind("<FocusIn>", rate_temp_text)
 
+    frame.update()
+
     submit_button = tkinter.Button(right_frame, text='Submit',
-                                   command=lambda: submit_func(syntax.get(), desc.get(), rate_syn.get(), frame))
+                                   command=lambda: vul_submit_func(syntax, desc, rate_syn, frame))
     submit_button.grid(column=0, row=4, columnspan=2, pady=5)
 
 
@@ -226,7 +229,7 @@ def gui():
     left_menu_frame.columnconfigure(0, weight=1)
 
     # Right Frame
-    right_frame = tkinter.Frame(window)
+    right_frame = tkinter.Frame(window, bg='red')
     right_frame.grid(column=1, row=2, columnspan=2, sticky='nsew')
 
     # Right Frame Column Configure
