@@ -1,15 +1,18 @@
-('pymetasploit3', 'Discover Hidden Vulnerabilities', '3')
-('Socket', 'Port Scanning and Port Sniffing', '3')
-('NMap', 'Network Scanning Tool', '3')
-('twisted', 'Network Scanning Tool', '3')
-('YARA', 'Malware Identification and Classification Tool', '2')
-('cryptography', 'Implementing of Cryptographic Algorithms', '2')
-('pylibnet', 'Packet Injection and Packet Sniffing', '3')
-('impacket', 'For Network Protocols and Provide low level Programatic Access to the Packet', '2')
-('pwntool', 'used for Reversed Engineering and Penetrating Testing', '3')
-('faker', 'used to Generate Fake Information', '2')
-('os', 'used to access Operating System files', '3')
-('exec', 'can be to used to execute commands intentionally', '3')
-('eval', 'can execute commands', '2')
-('sys', 'Used to run cmd or terminal commands', '2')
-('"software\\microsoft\\windows\\currentversion\\Run"', 'sensitive location to insert Malware', '3')
+pymetasploit3, Discover hidden Vulnerabilities, 3
+socket, Port Scanning and Port Sniffing, 3
+NMap, Network Scanner Tool, 2
+twisted, Network Scanner Tool, 2
+scapy, Packet Processing Decoding Forging and Analysing Packet Information, 3
+YARA, Malware Identification, 3
+Cryptography, Implementing cryptographic Algorithm, 2
+python-NMap, Network Scanner Tool, 2
+pylibnet, Packet Injection and Frame Sniffing, 3
+impacket, work with Network Protocol and provide Low-Level programmatic Access, 3
+pwntool, Used to Automating Reverse Engineering Penetration Test and create Exploits, 3
+faker, Used to generate Fake information, 2
+os, Used to Access Operating System Files, 2
+sys, Used to Access system files and can run cmd or terminal commands, 2
+tempfile, used to access temporary files, 1
+exec, Used to Execute command and can be used to run cmd or terminal Command, 2
+eval, will execute commands , 1
+compile, will execute any commands, 2

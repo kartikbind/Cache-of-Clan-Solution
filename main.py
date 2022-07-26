@@ -63,10 +63,13 @@ def open_code(code_link_list: list):
             while found:
                 if "Copy lines" in code_2[i]:
                     found = False
-                program.append(code_2[i])
+                if code_2[i] == "                View blame" or code_2[i] == "            Copy lines":
+                    pass
+                else:
+                    program.append(code_2[i])
                 i = i + 1
-        program.remove("                View blame")
-        program.remove("            Copy lines")
+        #program.remove("                View blame")
+        #program.remove("            Copy lines")
     return program
 
 
@@ -117,8 +120,7 @@ def display_code(frame):
 
 def vul_submit_func(syn, des, rate, frame_1):
     f = open("vulnerable_syntax.txt", "a")
-    f.write(str((syn.get(), des.get(), rate.get())))
-    f.write('\n')
+    f.write(f'{syn.get()}, {des.get()}, {rate.get()}\n')
     f.close()
     add_vulnerable_syntax(frame_1)
 
@@ -183,6 +185,67 @@ def add_vulnerable_syntax(frame):
     submit_button.grid(column=0, row=4, columnspan=2, pady=5)
 
 
+def check_repo_code(frame):
+    def temp_text(e):
+        url_entry.delete(0, "end")
+
+    clear_frame(frame)  # clear the widgets inside the frame
+
+    # input URL variable
+    input_repo_url = tkinter.StringVar()
+
+    # Right frame for working palate
+    right_frame = tkinter.Frame(frame)
+    right_frame.grid(sticky='n')
+
+    # Right frame display frame column configure
+    right_frame.columnconfigure(0, weight=10)
+    right_frame.columnconfigure(1, weight=1)
+
+    # Instruction Label
+    title_label = tkinter.Label(right_frame, text="To check for vulnerability in the Repo", font=('Arial', 20))
+    title_label.grid(row=0, columnspan=2)
+    github_link_label = tkinter.Label(right_frame, text="Enter the Repo link Below")
+    github_link_label.grid(row=1, column=0, columnspan=2)
+    url_entry = tkinter.Entry(right_frame, textvariable=input_repo_url, width=50)
+    url_entry.insert(0, "Enter the Github URL of the Repo")
+    url_entry.grid(row=2, column=0)
+    url_entry.bind("<FocusIn>", temp_text)
+    submit_button = tkinter.Button(right_frame, text="Submit", width=5,
+                                   command=lambda: check_repo(input_repo_url.get()))
+    submit_button.grid(row=2, column=1)
+
+
+def check_repo(link):
+    f = open("vulnerable_syntax.txt", "r")
+    code = open_code(code_link_finder(dir_link_finder(link)))
+    a = f.read().split('\n')
+    a.pop()
+    b = list()
+    syn_list = list()
+    des_list = list()
+    rating_list = list()
+    vulnerabilities_index = list()
+    for i in range(len(a)):
+        if a[i] == '':
+            pass
+
+        else:
+            c = tuple(a[i].split(', '))
+            b.append(c)
+            syn, des, rate = b[i]
+            for syntax in code:
+                if syn in syntax:
+                    vulnerabilities_index.append(i)
+            syn_list.append(syn)
+            des_list.append(des)
+            rating_list.append(rate)
+    for index in vulnerabilities_index:
+        print(syn_list[index])
+        print(des_list[index])
+        print(rating_list[index])
+
+
 def gui():
     window = tkinter.Tk()
     window.title("Flipkart GRiD 4.0")
@@ -241,7 +304,8 @@ def gui():
     # Buttons for Left Menu
     button_width = 20
     button_pad_x = 5
-    check_repo_button = tkinter.Button(left_menu_frame, text="Check Repo", width=button_width, command=window.quit)
+    check_repo_button = tkinter.Button(left_menu_frame, text="Check Repo", width=button_width,
+                                       command=lambda: check_repo_code(right_frame))
     check_repo_button.grid(padx=button_pad_x, pady=5)
     rate_repo_button = tkinter.Button(left_menu_frame, text="Rate Repo", width=button_width)
     rate_repo_button.grid(padx=button_pad_x, pady=5)
@@ -266,3 +330,4 @@ def gui():
 
 
 gui()
+
