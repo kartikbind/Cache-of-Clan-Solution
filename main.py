@@ -113,6 +113,7 @@ def display_code(frame):
     url_entry.insert(0, "Enter the Github URL of the Repo")
     url_entry.grid(row=2, column=0)
     url_entry.bind("<FocusIn>", temp_text)
+    url_entry.update()
     submit_button = tkinter.Button(right_frame, text="Submit", width=5,
                                    command=lambda: display_submit_func(frame, input_repo_url.get()))
     submit_button.grid(row=2, column=1)
@@ -211,12 +212,13 @@ def check_repo_code(frame):
     url_entry.insert(0, "Enter the Github URL of the Repo")
     url_entry.grid(row=2, column=0)
     url_entry.bind("<FocusIn>", temp_text)
+    url_entry.update()
     submit_button = tkinter.Button(right_frame, text="Submit", width=5,
-                                   command=lambda: check_repo(input_repo_url.get()))
+                                   command=lambda: check_repo(input_repo_url.get(), frame))
     submit_button.grid(row=2, column=1)
 
 
-def check_repo(link):
+def check_repo(link, frame):
     f = open("vulnerable_syntax.txt", "r")
     code = open_code(code_link_finder(dir_link_finder(link)))
     a = f.read().split('\n')
@@ -226,6 +228,8 @@ def check_repo(link):
     des_list = list()
     rating_list = list()
     vulnerabilities_index = list()
+    syn_max_length = 0
+    des_max_length = 0
     for i in range(len(a)):
         if a[i] == '':
             pass
@@ -234,16 +238,24 @@ def check_repo(link):
             c = tuple(a[i].split(', '))
             b.append(c)
             syn, des, rate = b[i]
-            for syntax in code:
-                if syn in syntax:
-                    vulnerabilities_index.append(i)
             syn_list.append(syn)
             des_list.append(des)
             rating_list.append(rate)
+            for syntax in code:
+                if syn in syntax:
+                    vulnerabilities_index.append(i)
+                    syn_max_length = max(syn_max_length, len(syn))
+                    des_max_length = max(des_max_length, len(des_list[i]))
+    clear_frame(frame)
+    text_box = tkinter.Text(frame, font=('Arial', 15))
+    text_box.insert(1.0, f'Following are the Vulnerabilities in the {link} Repo\n')
+    text_box.insert(2.0, '\n')
+    i = 3.0
+    syn_max_length = syn_max_length + 5
     for index in vulnerabilities_index:
-        print(syn_list[index])
-        print(des_list[index])
-        print(rating_list[index])
+        text_box.insert(i, f'{syn_list[index]: ^{syn_max_length}s} {des_list[index]: ^{des_max_length}s}\n')
+        i = i + 1
+    text_box.grid(sticky='nsew')
 
 
 def gui():
@@ -304,17 +316,23 @@ def gui():
     # Buttons for Left Menu
     button_width = 20
     button_pad_x = 5
+
+    # Check Repo Label
     check_repo_button = tkinter.Button(left_menu_frame, text="Check Repo", width=button_width,
                                        command=lambda: check_repo_code(right_frame))
     check_repo_button.grid(padx=button_pad_x, pady=5)
+
     rate_repo_button = tkinter.Button(left_menu_frame, text="Rate Repo", width=button_width)
     rate_repo_button.grid(padx=button_pad_x, pady=5)
+
     add_vulnerabilities = tkinter.Button(left_menu_frame, text=" Add Vulnerable Syntax", width=button_width,
                                          command=lambda: add_vulnerable_syntax(right_frame))
     add_vulnerabilities.grid(padx=button_pad_x, pady=5)
+
     display_code_button = tkinter.Button(left_menu_frame, text="Display Codes", width=button_width,
                                          command=lambda: display_code(right_frame))
     display_code_button.grid(padx=button_pad_x, pady=5)
+
     team_info = tkinter.Button(window, text="Team Information", width=button_width)
     team_info.grid(padx=button_pad_x, pady=5)
 
