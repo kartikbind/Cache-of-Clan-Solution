@@ -74,6 +74,7 @@ def open_code(code_link_list: list):
     return program
 
 
+# Function Which clear the frame
 def clear_frame(frame):
     for widgets in frame.winfo_children():
         widgets.destroy()
@@ -86,7 +87,7 @@ def display_submit_func(frame, link):
     text_box = tkinter.Text(frame)
     for i in range(len(code)):
         text_box.insert(float(i + 1), code[i] + '\n')
-    text_box.grid(column=0, row=0, sticky='nsew')
+    text_box.grid(column=0, row=0, sticky='nsew', pady=5, padx=5)
 
 
 # Function which take GitHub URl as input for displaying the Code in the Repo
@@ -149,7 +150,7 @@ def add_vulnerable_syntax(frame):
     rate_syn = tkinter.StringVar()
 
     # right frame for adding widgets
-    right_frame = tkinter.Frame(frame, bg='green')
+    right_frame = tkinter.Frame(frame)
     right_frame.grid(sticky='nsew', padx=5)
 
     # right frame column Configuration
@@ -198,6 +199,7 @@ def add_vulnerable_syntax(frame):
     submit_button.grid(column=0, row=4, columnspan=2, pady=5)
 
 
+# Function for UI for taking GitHub URL as input to check Repo for Vulnerability
 def check_repo_code(frame):
     def temp_text(e):
         url_entry.delete(0, "end")
@@ -216,7 +218,7 @@ def check_repo_code(frame):
     right_frame.columnconfigure(1, weight=1)
 
     # Instruction Label
-    title_label = tkinter.Label(right_frame, text="To check for vulnerability in the Repo", font=('Arial', 20))
+    title_label = tkinter.Label(right_frame, text="To check for Vulnerability in the Repo", font=('Arial', 20))
     title_label.grid(row=0, columnspan=2)
 
     # Github Link Label
@@ -236,6 +238,7 @@ def check_repo_code(frame):
     submit_button.grid(row=2, column=1)
 
 
+# Function which returns the Vulnerabilities
 def return_vul(link):
     f = open("vulnerable_syntax.txt", "r")
     code = open_code(code_link_finder(dir_link_finder(link)))
@@ -261,6 +264,7 @@ def return_vul(link):
     return vul_syn_list, vul_des_list, vul_rating_list
 
 
+# Function to Show the Vulnerabilities in the Repo
 def check_repo(link, frame):
     vul_syn_list = list()
     vul_des_list = list()
@@ -280,7 +284,7 @@ def check_repo(link, frame):
     for index in range(len(vul_syn_list)):
         text_box.insert(i, f'{vul_syn_list[index]: ^{syn_max_length}s} {vul_des_list[index]: ^{des_max_length}s}\n')
         i = i + 1
-    text_box.grid(row=0, column=0, sticky='nsew')
+    text_box.grid(row=0, column=0, sticky='nsew', padx=5, pady=5)
 
     # Rate Repo Button
     rate_button = tkinter.Button(frame, text='Rate Repo',
@@ -288,6 +292,7 @@ def check_repo(link, frame):
     rate_button.grid(row=1, column=0, sticky='s')
 
 
+# Function which show the Rating the for the Repo
 def rate_repo_submit(frame, rating_list):
     rate = 0.0
     for r in rating_list:
@@ -298,15 +303,22 @@ def rate_repo_submit(frame, rating_list):
         rate_label.grid()
     else:
         # Rate Heading
-        rate_label = tkinter.Label(frame, text="The Repo have Vulnerabilities")
-        rate_label.grid(row=3, column=0, sticky='n')
+        rate_label = tkinter.Label(frame, text="The Repo have Vulnerabilities", font=('Arial', 20), fg='red')
+        rate_label.grid(row=3, column=0, sticky='n', columnspan=3)
 
         # Progress bar
         rate_value = (rate / 3.0) * 100
-        progress_bar = Progressbar(frame, orient=tkinter.HORIZONTAL, length=100, mode='determinate', value=rate_value)
-        progress_bar.grid(row=4, column=0, sticky='n')
+        lower_frame = tkinter.Frame(frame)
+        lower_frame.grid(sticky='s')
+        good_label = tkinter.Label(lower_frame, text='Good', fg='green')
+        good_label.grid(row=4, column=0)
+        progress_bar = Progressbar(lower_frame, orient=tkinter.HORIZONTAL, length=300, mode='determinate', value=rate_value)
+        progress_bar.grid(row=4, column=1, sticky='n')
+        bad_label = tkinter.Label(lower_frame, text='Bad', fg='red')
+        bad_label.grid(row=4, column=2)
 
 
+# Function which calls the
 def check_rate(link, frame):
     vul_syn_list, vul_des_list, vul_rating_list = return_vul(link)
     rate_repo_submit(frame, vul_rating_list)
@@ -397,7 +409,7 @@ def gui():
     left_menu_frame.columnconfigure(0, weight=1)
 
     # Right Frame
-    right_frame = tkinter.Frame(window, bg='red')
+    right_frame = tkinter.Frame(window)
     right_frame.grid(column=1, row=2, columnspan=2, sticky='nsew')
 
     # Right Frame Column Configure
