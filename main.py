@@ -1,6 +1,9 @@
+from tkinter import VERTICAL
+
 import requests
 from bs4 import BeautifulSoup
 import tkinter
+from tkinter.ttk import *
 from PIL import Image, ImageTk
 
 
@@ -76,6 +79,7 @@ def clear_frame(frame):
         widgets.destroy()
 
 
+# Function to Display all the Code in the Repo
 def display_submit_func(frame, link):
     code = open_code(code_link_finder(dir_link_finder(link)))
     clear_frame(frame)
@@ -85,6 +89,7 @@ def display_submit_func(frame, link):
     text_box.grid(column=0, row=0, sticky='nsew')
 
 
+# Function which take GitHub URl as input for displaying the Code in the Repo
 def display_code(frame):
     def temp_text(e):
         url_entry.delete(0, "end")
@@ -103,7 +108,7 @@ def display_code(frame):
     right_frame.columnconfigure(1, weight=1)
 
     # Instruction Label
-    title_label = tkinter.Label(right_frame, text="To check for vulnerability in the Repo", font=('Arial', 20))
+    title_label = tkinter.Label(right_frame, text="To Display All the Code in the Repo", font=('Arial', 20))
     title_label.grid(row=0, columnspan=2)
     github_link_label = tkinter.Label(right_frame, text="Enter the Repo link Below")
     github_link_label.grid(row=1, column=0, columnspan=2)
@@ -117,6 +122,7 @@ def display_code(frame):
     submit_button.grid(row=2, column=1)
 
 
+# this adds the vulnerabilities into the file
 def vul_submit_func(syn, des, rate, frame_1):
     f = open("vulnerable_syntax.txt", "a")
     f.write(f'{syn.get()}, {des.get()}, {rate.get()}\n')
@@ -124,6 +130,7 @@ def vul_submit_func(syn, des, rate, frame_1):
     add_vulnerable_syntax(frame_1)
 
 
+# Shows when Add Vulnerability is Clicked
 def add_vulnerable_syntax(frame):
     def syn_temp_text(w):
         syntax_entry.delete(0, "end")
@@ -179,7 +186,7 @@ def add_vulnerable_syntax(frame):
 
     # Danger Rating Entry
     danger_rating_entry = tkinter.Entry(right_frame, textvariable=rate_syn)
-    danger_rating_entry.insert(0, "Severity of Syntax 1: Low, 2: Medium, 3: Highly")
+    danger_rating_entry.insert(0, "Severity of Syntax 1: Low, 2: Medium, 3: High")
     danger_rating_entry.grid(column=1, row=3, sticky='ew', padx=5, pady=5)
     danger_rating_entry.bind("<FocusIn>", rate_temp_text)
 
@@ -229,18 +236,15 @@ def check_repo_code(frame):
     submit_button.grid(row=2, column=1)
 
 
-def check_repo(link, frame):
+def return_vul(link):
     f = open("vulnerable_syntax.txt", "r")
     code = open_code(code_link_finder(dir_link_finder(link)))
     a = f.read().split('\n')
     a.pop()
     b = list()
-    syn_list = list()
-    des_list = list()
-    rating_list = list()
-    vulnerabilities_index = list()
-    syn_max_length = 0
-    des_max_length = 0
+    vul_syn_list = list()
+    vul_des_list = list()
+    vul_rating_list = list()
     for i in range(len(a)):
         if a[i] == '':
             pass
@@ -249,14 +253,21 @@ def check_repo(link, frame):
             c = tuple(a[i].split(', '))
             b.append(c)
             syn, des, rate = b[i]
-            syn_list.append(syn)
-            des_list.append(des)
-            rating_list.append(rate)
             for syntax in code:
                 if syn in syntax:
-                    vulnerabilities_index.append(i)
-                    syn_max_length = max(syn_max_length, len(syn))
-                    des_max_length = max(des_max_length, len(des_list[i]))
+                    vul_syn_list.append(syn)
+                    vul_des_list.append(des)
+                    vul_rating_list.append(rate)
+    return vul_syn_list, vul_des_list, vul_rating_list
+
+
+def check_repo(link, frame):
+    vul_syn_list = list()
+    vul_des_list = list()
+    vul_rating_list = list()
+    vul_syn_list, vul_des_list, vul_rating_list = return_vul(link)
+
+    # Clear the Frame
     clear_frame(frame)
 
     # Text Box for Vulnerabilities
@@ -264,26 +275,44 @@ def check_repo(link, frame):
     text_box.insert(1.0, f'Following are the Vulnerabilities in the {link} Repo\n')
     text_box.insert(2.0, '\n')
     i = 3.0
-    syn_max_length = syn_max_length + 5
-    for index in vulnerabilities_index:
-        text_box.insert(i, f'{syn_list[index]: ^{syn_max_length}s} {des_list[index]: ^{des_max_length}s}\n')
+    syn_max_length = len(max(vul_syn_list)) + 5
+    des_max_length = len(max(vul_des_list)) + 5
+    for index in range(len(vul_syn_list)):
+        text_box.insert(i, f'{vul_syn_list[index]: ^{syn_max_length}s} {vul_des_list[index]: ^{des_max_length}s}\n')
         i = i + 1
     text_box.grid(row=0, column=0, sticky='nsew')
 
     # Rate Repo Button
     rate_button = tkinter.Button(frame, text='Rate Repo',
-                                 command=lambda: rate_repo_submit(frame, rating_list, vulnerabilities_index))
+                                 command=lambda: rate_repo_submit(frame, vul_rating_list))
     rate_button.grid(row=1, column=0, sticky='s')
 
 
-def rate_repo_submit(frame, rating_list, vul_index):
-    rate = 0
-    for index in vul_index:
-        print(rating_list[index])
-        rate = rate + int(rating_list[index])
-    print(float(rate/len(vul_index)))
+def rate_repo_submit(frame, rating_list):
+    rate = 0.0
+    for r in rating_list:
+        rate = rate + int(r)
+    rate = float(rate/len(rating_list))
+    if rate == 0.0:
+        rate_label = tkinter.Label(frame, text="The Repo is safe and have Zero Vulnerabilities", font=('Arial', 20))
+        rate_label.grid()
+    else:
+        # Rate Heading
+        rate_label = tkinter.Label(frame, text="The Repo have Vulnerabilities")
+        rate_label.grid(row=3, column=0, sticky='n')
+
+        # Progress bar
+        rate_value = (rate / 3.0) * 100
+        progress_bar = Progressbar(frame, orient=tkinter.HORIZONTAL, length=100, mode='determinate', value=rate_value)
+        progress_bar.grid(row=4, column=0, sticky='n')
 
 
+def check_rate(link, frame):
+    vul_syn_list, vul_des_list, vul_rating_list = return_vul(link)
+    rate_repo_submit(frame, vul_rating_list)
+
+
+# Function for UI to take GitHub URL as input for rating the Repo
 def rate_repo_code(frame):
     def temp_text(e):
         url_entry.delete(0, "end")
@@ -318,7 +347,7 @@ def rate_repo_code(frame):
 
     # Submit Button
     submit_button = tkinter.Button(right_frame, text="Submit", width=5,
-                                   command=lambda: check_repo(input_repo_url.get(), frame))
+                                   command=lambda: check_rate(input_repo_url.get(), frame))
     submit_button.grid(row=2, column=1)
 
 
@@ -386,7 +415,8 @@ def gui():
                                        command=lambda: check_repo_code(right_frame))
     check_repo_button.grid(padx=button_pad_x, pady=5)
 
-    rate_repo_button = tkinter.Button(left_menu_frame, text="Rate Repo", width=button_width)
+    rate_repo_button = tkinter.Button(left_menu_frame, text="Rate Repo", width=button_width,
+                                      command=lambda: rate_repo_code(right_frame))
     rate_repo_button.grid(padx=button_pad_x, pady=5)
 
     add_vulnerabilities = tkinter.Button(left_menu_frame, text=" Add Vulnerable Syntax", width=button_width,
@@ -412,4 +442,3 @@ def gui():
 
 
 gui()
-
