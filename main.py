@@ -68,8 +68,6 @@ def open_code(code_link_list: list):
                 else:
                     program.append(code_2[i])
                 i = i + 1
-        #program.remove("                View blame")
-        #program.remove("            Copy lines")
     return program
 
 
@@ -158,6 +156,8 @@ def add_vulnerable_syntax(frame):
     # Syntax
     syntax_label = tkinter.Label(right_frame, text='Syntax', font=('Arial', 15))
     syntax_label.grid(column=0, row=1, sticky='e', padx=5, pady=5)
+
+    # Syntax Entry
     syntax_entry = tkinter.Entry(right_frame, textvariable=syntax)
     syntax_entry.insert(0, "Enter the Vulnerable Syntax")
     syntax_entry.grid(column=1, row=1, sticky='ew', padx=5, pady=5)
@@ -166,6 +166,8 @@ def add_vulnerable_syntax(frame):
     # Description
     desc_label = tkinter.Label(right_frame, text='Description', font=('Arial', 15))
     desc_label.grid(column=0, row=2, sticky='e', padx=5, pady=5)
+
+    # Description Entry
     desc_entry = tkinter.Entry(right_frame, textvariable=desc)
     desc_entry.insert(0, "Describe the Vulnerability")
     desc_entry.grid(column=1, row=2, sticky='ew', padx=5, pady=5)
@@ -174,6 +176,8 @@ def add_vulnerable_syntax(frame):
     # Rating
     danger_rating_label = tkinter.Label(right_frame, text='Syntax Danger Rating', font=('Arial', 15))
     danger_rating_label.grid(column=0, row=3, sticky='e', padx=5, pady=5)
+
+    # Danger Rating Entry
     danger_rating_entry = tkinter.Entry(right_frame, textvariable=rate_syn)
     danger_rating_entry.insert(0, "Severity of Syntax 1: Low, 2: Medium, 3: Highly")
     danger_rating_entry.grid(column=1, row=3, sticky='ew', padx=5, pady=5)
@@ -181,6 +185,7 @@ def add_vulnerable_syntax(frame):
 
     frame.update()
 
+    # Submit Button
     submit_button = tkinter.Button(right_frame, text='Submit',
                                    command=lambda: vul_submit_func(syntax, desc, rate_syn, frame))
     submit_button.grid(column=0, row=4, columnspan=2, pady=5)
@@ -206,13 +211,19 @@ def check_repo_code(frame):
     # Instruction Label
     title_label = tkinter.Label(right_frame, text="To check for vulnerability in the Repo", font=('Arial', 20))
     title_label.grid(row=0, columnspan=2)
+
+    # Github Link Label
     github_link_label = tkinter.Label(right_frame, text="Enter the Repo link Below")
     github_link_label.grid(row=1, column=0, columnspan=2)
+
+    # URL Entry Label
     url_entry = tkinter.Entry(right_frame, textvariable=input_repo_url, width=50)
     url_entry.insert(0, "Enter the Github URL of the Repo")
     url_entry.grid(row=2, column=0)
     url_entry.bind("<FocusIn>", temp_text)
     url_entry.update()
+
+    # Submit Button
     submit_button = tkinter.Button(right_frame, text="Submit", width=5,
                                    command=lambda: check_repo(input_repo_url.get(), frame))
     submit_button.grid(row=2, column=1)
@@ -247,6 +258,8 @@ def check_repo(link, frame):
                     syn_max_length = max(syn_max_length, len(syn))
                     des_max_length = max(des_max_length, len(des_list[i]))
     clear_frame(frame)
+
+    # Text Box for Vulnerabilities
     text_box = tkinter.Text(frame, font=('Arial', 15))
     text_box.insert(1.0, f'Following are the Vulnerabilities in the {link} Repo\n')
     text_box.insert(2.0, '\n')
@@ -255,7 +268,58 @@ def check_repo(link, frame):
     for index in vulnerabilities_index:
         text_box.insert(i, f'{syn_list[index]: ^{syn_max_length}s} {des_list[index]: ^{des_max_length}s}\n')
         i = i + 1
-    text_box.grid(sticky='nsew')
+    text_box.grid(row=0, column=0, sticky='nsew')
+
+    # Rate Repo Button
+    rate_button = tkinter.Button(frame, text='Rate Repo',
+                                 command=lambda: rate_repo_submit(frame, rating_list, vulnerabilities_index))
+    rate_button.grid(row=1, column=0, sticky='s')
+
+
+def rate_repo_submit(frame, rating_list, vul_index):
+    rate = 0
+    for index in vul_index:
+        print(rating_list[index])
+        rate = rate + int(rating_list[index])
+    print(float(rate/len(vul_index)))
+
+
+def rate_repo_code(frame):
+    def temp_text(e):
+        url_entry.delete(0, "end")
+
+    clear_frame(frame)  # clear the widgets inside the frame
+
+    # input URL variable
+    input_repo_url = tkinter.StringVar()
+
+    # Right frame for working palate
+    right_frame = tkinter.Frame(frame)
+    right_frame.grid(sticky='n')
+
+    # Right frame display frame column configure
+    right_frame.columnconfigure(0, weight=10)
+    right_frame.columnconfigure(1, weight=1)
+
+    # Instruction Label
+    title_label = tkinter.Label(right_frame, text="To Rate the Repo", font=('Arial', 20))
+    title_label.grid(row=0, columnspan=2)
+
+    # Github Link Label
+    github_link_label = tkinter.Label(right_frame, text="Enter the Repo link Below")
+    github_link_label.grid(row=1, column=0, columnspan=2)
+
+    # URL Entry Label
+    url_entry = tkinter.Entry(right_frame, textvariable=input_repo_url, width=50)
+    url_entry.insert(0, "Enter the Github URL of the Repo")
+    url_entry.grid(row=2, column=0)
+    url_entry.bind("<FocusIn>", temp_text)
+    url_entry.update()
+
+    # Submit Button
+    submit_button = tkinter.Button(right_frame, text="Submit", width=5,
+                                   command=lambda: check_repo(input_repo_url.get(), frame))
+    submit_button.grid(row=2, column=1)
 
 
 def gui():
