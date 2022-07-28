@@ -385,11 +385,22 @@ def team_info_display(frame):
     frame.columnconfigure(2, weight=1)
     frame.columnconfigure(3, weight=1)
 
+    team_post = tkinter.Label(frame, text='Team Member', font=('Arial', 15))
+    team_post.grid(column=0, row=0, sticky='n')
+    member_pic = tkinter.Label(frame, text='Profile\nPicture', font=('Arial', 15))
+    member_pic.grid(column=0, row=1, sticky='n')
+    member_name = tkinter.Label(frame, text='Name', font=('Arial', 15))
+    member_name.grid(column=0, row=2, sticky='n')
+    institute_name = tkinter.Label(frame, text='Institute Name', font=('Arial', 15))
+    institute_name.grid(column=0, row=3, sticky='n')
+    passing_batch = tkinter.Label(frame, text='Passing Batch', font=('Arial', 15))
+    passing_batch.grid(column=0, row=4, sticky='n')
+
     # LEADER
 
     # Leader Label
     leader_label = tkinter.Label(frame, text='Leader', font=('Arial', 15))
-    leader_label.grid(row=0, column=1, sticky='NS')
+    leader_label.grid(row=0, column=1, sticky='N')
 
     # Leader Profile Picture
     leader_pic = Image.open('Profile Pic.jpg')
@@ -407,11 +418,15 @@ def team_info_display(frame):
     leader_institute_name = tkinter.Label(frame, text='Dr. Akhilesh Das Gupta Institute\nof\nTechnology & Management')
     leader_institute_name.grid(column=1, row=3, sticky='N')
 
+    # Leader Passing Batch
+    leader_passing_batch_label = tkinter.Label(frame, text='2023', font=('Arial', 15))
+    leader_passing_batch_label.grid(column=1, row=4, sticky='n')
+
     # Member-1
 
     # Member-1 Label
     leader_label = tkinter.Label(frame, text='Member-1', font=('Arial', 15))
-    leader_label.grid(row=0, column=2, sticky='NS')
+    leader_label.grid(row=0, column=2, sticky='N')
 
     # Member-1 Profile Picture
     member_1_pic = Image.open('Kabir_Profile_Pic.jpeg')
@@ -422,18 +437,22 @@ def team_info_display(frame):
     member_1_pic_label.grid(row=1, column=2, sticky='n')
 
     # Member-1 Name
-    member_1_name = tkinter.Label(frame, text='Kabir Sharma')
+    member_1_name = tkinter.Label(frame, text='Kabir Sharma', font=('Arial', 15))
     member_1_name.grid(row=2, column=2, sticky='n')
 
     # Member-1 Institute Name
     member_1_institute_name = tkinter.Label(frame, text='Dr. Akhilesh Das Gupta Institute\nof\nTechnology & Management')
     member_1_institute_name.grid(column=2, row=3, sticky='N')
 
+    # Member-1 Passing Batch
+    member_1_passing_batch_label = tkinter.Label(frame, text='2023', font=('Arial', 15))
+    member_1_passing_batch_label.grid(column=2, row=4, sticky='n')
+
     # Member-2
 
     # Member-2 Label
     leader_label = tkinter.Label(frame, text='Member-2', font=('Arial', 15))
-    leader_label.grid(row=0, column=3, sticky='NS')
+    leader_label.grid(row=0, column=3, sticky='N')
 
     # Member-2 Profile Picture
     member_2_pic = Image.open('Yukti_Profile_Pic.jpeg')
@@ -444,12 +463,16 @@ def team_info_display(frame):
     member_2_pic_label.grid(row=1, column=3, sticky='n')
 
     # Member-2 Name
-    member_2_name = tkinter.Label(frame, text=' Yukti')
+    member_2_name = tkinter.Label(frame, text=' Yukti', font=('Arial', 15))
     member_2_name.grid(row=2, column=3, sticky='n')
 
     # Member-2 Institute Name
     member_2_institute_name = tkinter.Label(frame, text='Dr. Akhilesh Das Gupta Institute\nof\nTechnology & Management')
     member_2_institute_name.grid(column=3, row=3, sticky='N')
+
+    # Member-2 Passing Batch
+    member_2_passing_batch = tkinter.Label(frame, text='2023', font=('Arial', 15))
+    member_2_passing_batch.grid(column=3, row=4)
 
 
 def gui():
@@ -457,7 +480,7 @@ def gui():
     window.title("Flipkart GRiD 4.0")
 
     # To find the center of the screen according to the app dimension
-    app_width = 900
+    app_width = 1000
     app_height = 750
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
