@@ -1,5 +1,3 @@
-from tkinter import VERTICAL
-
 import requests
 from bs4 import BeautifulSoup
 import tkinter
@@ -159,42 +157,46 @@ def add_vulnerable_syntax(frame):
 
     # title label and all functionality widgets
     title_label = tkinter.Label(right_frame, text='Add Vulnerable Syntax', font=('Arial', 20))
-    title_label.grid(row=0, column=0, columnspan=2, pady=5)
+    title_label.grid(row=0, column=0, columnspan=2,sticky='ew', pady=5, padx=5)
+
+    # Form Frame
+    form_frame = tkinter.Frame(right_frame)
+    form_frame.grid(row=1, column=1, pady=5, padx=5, sticky='ns')
 
     # Syntax
-    syntax_label = tkinter.Label(right_frame, text='Syntax', font=('Arial', 15))
-    syntax_label.grid(column=0, row=1, sticky='e', padx=5, pady=5)
+    syntax_label = tkinter.Label(form_frame, text='Syntax', font=('Arial', 15))
+    syntax_label.grid(column=0, row=0, sticky='e', padx=5, pady=5)
 
     # Syntax Entry
-    syntax_entry = tkinter.Entry(right_frame, textvariable=syntax)
+    syntax_entry = tkinter.Entry(form_frame, textvariable=syntax, width=50)
     syntax_entry.insert(0, "Enter the Vulnerable Syntax")
-    syntax_entry.grid(column=1, row=1, sticky='ew', padx=5, pady=5)
+    syntax_entry.grid(column=1, row=0, sticky='w', padx=5, pady=5)
     syntax_entry.bind("<FocusIn>", syn_temp_text)
 
     # Description
-    desc_label = tkinter.Label(right_frame, text='Description', font=('Arial', 15))
-    desc_label.grid(column=0, row=2, sticky='e', padx=5, pady=5)
+    desc_label = tkinter.Label(form_frame, text='Description', font=('Arial', 15))
+    desc_label.grid(column=0, row=1, sticky='e', padx=5, pady=5)
 
     # Description Entry
-    desc_entry = tkinter.Entry(right_frame, textvariable=desc)
+    desc_entry = tkinter.Entry(form_frame, textvariable=desc, width=50)
     desc_entry.insert(0, "Describe the Vulnerability")
-    desc_entry.grid(column=1, row=2, sticky='ew', padx=5, pady=5)
+    desc_entry.grid(column=1, row=1, sticky='w', padx=5, pady=5)
     desc_entry.bind("<FocusIn>", desc_temp_text)
 
     # Rating
-    danger_rating_label = tkinter.Label(right_frame, text='Syntax Danger Rating', font=('Arial', 15))
-    danger_rating_label.grid(column=0, row=3, sticky='e', padx=5, pady=5)
+    danger_rating_label = tkinter.Label(form_frame, text='Syntax Danger Rating', font=('Arial', 15))
+    danger_rating_label.grid(column=0, row=2, sticky='e', padx=5, pady=5)
 
     # Danger Rating Entry
-    danger_rating_entry = tkinter.Entry(right_frame, textvariable=rate_syn)
+    danger_rating_entry = tkinter.Entry(form_frame, textvariable=rate_syn, width=50)
     danger_rating_entry.insert(0, "Severity of Syntax 1: Low, 2: Medium, 3: High")
-    danger_rating_entry.grid(column=1, row=3, sticky='ew', padx=5, pady=5)
+    danger_rating_entry.grid(column=1, row=2, sticky='w', padx=5, pady=5)
     danger_rating_entry.bind("<FocusIn>", rate_temp_text)
 
     frame.update()
 
     # Submit Button
-    submit_button = tkinter.Button(right_frame, text='Submit',
+    submit_button = tkinter.Button(form_frame, text='Submit',
                                    command=lambda: vul_submit_func(syntax, desc, rate_syn, frame))
     submit_button.grid(column=0, row=4, columnspan=2, pady=5)
 
@@ -302,20 +304,24 @@ def rate_repo_submit(frame, rating_list):
         rate_label = tkinter.Label(frame, text="The Repo is safe and have Zero Vulnerabilities", font=('Arial', 20))
         rate_label.grid()
     else:
-        # Rate Heading
-        rate_label = tkinter.Label(frame, text="The Repo have Vulnerabilities", font=('Arial', 20), fg='red')
-        rate_label.grid(row=3, column=0, sticky='n', columnspan=3)
-
-        # Progress bar
         rate_value = (rate / 3.0) * 100
         lower_frame = tkinter.Frame(frame)
         lower_frame.grid(sticky='s')
-        good_label = tkinter.Label(lower_frame, text='Good', fg='green')
-        good_label.grid(row=4, column=0)
+        # Rate Heading
+        rate_label_heading = tkinter.Label(lower_frame, text="The Repo have Vulnerabilities", font=('Arial', 20), fg='red')
+        rate_label_heading.grid(row=0, column=0, sticky='n', columnspan=3)
+
+        # Label to Show the rating
+        rate_label = tkinter.Label(lower_frame, text=f'{rate:.3f}', font=('Arial', 20), fg='red')
+        rate_label.grid(row=1, columnspan=3)
+
+        # Progress bar
+        good_label = tkinter.Label(lower_frame, text='Good: 0', fg='green')
+        good_label.grid(row=2, column=0)
         progress_bar = Progressbar(lower_frame, orient=tkinter.HORIZONTAL, length=300, mode='determinate', value=rate_value)
-        progress_bar.grid(row=4, column=1, sticky='n')
-        bad_label = tkinter.Label(lower_frame, text='Bad', fg='red')
-        bad_label.grid(row=4, column=2)
+        progress_bar.grid(row=2, column=1, sticky='n')
+        bad_label = tkinter.Label(lower_frame, text='Bad: 3', fg='red')
+        bad_label.grid(row=2, column=2)
 
 
 # Function which calls the
@@ -363,6 +369,89 @@ def rate_repo_code(frame):
     submit_button.grid(row=2, column=1)
 
 
+# Function to Display Team Information
+def team_info_display(frame):
+    clear_frame(frame)
+
+    # Row Configure
+    frame.rowconfigure(0, weight=1)
+    frame.rowconfigure(1, weight=1)
+    frame.rowconfigure(2, weight=1)
+    frame.rowconfigure(3, weight=1)
+
+    # Column Configure
+    frame.columnconfigure(0, weight=1)
+    frame.columnconfigure(1, weight=1)
+    frame.columnconfigure(2, weight=1)
+    frame.columnconfigure(3, weight=1)
+
+    # LEADER
+
+    # Leader Label
+    leader_label = tkinter.Label(frame, text='Leader', font=('Arial', 15))
+    leader_label.grid(row=0, column=1, sticky='NS')
+
+    # Leader Profile Picture
+    leader_pic = Image.open('Profile Pic.jpg')
+    leader_pic = leader_pic.resize((150, 150))
+    leader_pic = ImageTk.PhotoImage(leader_pic)
+    leader_pic_label = tkinter.Label(frame, image=leader_pic)
+    leader_pic_label.image = leader_pic
+    leader_pic_label.grid(row=1, column=1, sticky='N')
+
+    # Leader Name
+    leader_name = tkinter.Label(frame, text="Kartik Bind", font=('Arial', 15))
+    leader_name.grid(column=1, row=2, sticky='N')
+
+    # Leader Institute Name
+    leader_institute_name = tkinter.Label(frame, text='Dr. Akhilesh Das Gupta Institute\nof\nTechnology & Management')
+    leader_institute_name.grid(column=1, row=3, sticky='N')
+
+    # Member-1
+
+    # Member-1 Label
+    leader_label = tkinter.Label(frame, text='Member-1', font=('Arial', 15))
+    leader_label.grid(row=0, column=2, sticky='NS')
+
+    # Member-1 Profile Picture
+    member_1_pic = Image.open('Kabir_Profile_Pic.jpeg')
+    member_1_pic = member_1_pic.resize((150, 150))
+    member_1_pic = ImageTk.PhotoImage(member_1_pic)
+    member_1_pic_label = tkinter.Label(frame, image=member_1_pic)
+    member_1_pic_label.image = member_1_pic
+    member_1_pic_label.grid(row=1, column=2, sticky='n')
+
+    # Member-1 Name
+    member_1_name = tkinter.Label(frame, text='Kabir Sharma')
+    member_1_name.grid(row=2, column=2, sticky='n')
+
+    # Member-1 Institute Name
+    member_1_institute_name = tkinter.Label(frame, text='Dr. Akhilesh Das Gupta Institute\nof\nTechnology & Management')
+    member_1_institute_name.grid(column=2, row=3, sticky='N')
+
+    # Member-2
+
+    # Member-2 Label
+    leader_label = tkinter.Label(frame, text='Member-2', font=('Arial', 15))
+    leader_label.grid(row=0, column=3, sticky='NS')
+
+    # Member-2 Profile Picture
+    member_2_pic = Image.open('Yukti_Profile_Pic.jpeg')
+    member_2_pic = member_2_pic.resize((150, 150))
+    member_2_pic = ImageTk.PhotoImage(member_2_pic)
+    member_2_pic_label = tkinter.Label(frame, image=member_2_pic)
+    member_2_pic_label.image = member_2_pic
+    member_2_pic_label.grid(row=1, column=3, sticky='n')
+
+    # Member-2 Name
+    member_2_name = tkinter.Label(frame, text=' Yukti')
+    member_2_name.grid(row=2, column=3, sticky='n')
+
+    # Member-2 Institute Name
+    member_2_institute_name = tkinter.Label(frame, text='Dr. Akhilesh Das Gupta Institute\nof\nTechnology & Management')
+    member_2_institute_name.grid(column=3, row=3, sticky='N')
+
+
 def gui():
     window = tkinter.Tk()
     window.title("Flipkart GRiD 4.0")
@@ -390,8 +479,8 @@ def gui():
     window.rowconfigure(3, weight=1)
 
     # Label for team name Cache of Clan
-    team_name_label = tkinter.Label(window, text="Cache of Clan")
-    team_name_label.grid(columnspan=3, row=0, sticky="EW", padx=5, pady=1)
+    team_name_label = tkinter.Label(window, text="Cache of Clan", font=('Arial', 20))
+    team_name_label.grid(columnspan=3, row=0, sticky="NS", padx=5)
 
     # Image of team
     pic = Image.open('Flipkart-GRiD-4.0.png')
@@ -402,8 +491,8 @@ def gui():
     pic_label.grid(row=1, columnspan=3)
 
     # Left Menu
-    left_menu_frame = tkinter.LabelFrame(window, text='Menu')
-    left_menu_frame.grid(column=0, row=2, sticky='nsew')
+    left_menu_frame = tkinter.LabelFrame(window, text='Menu', font=('Arial', 15))
+    left_menu_frame.grid(column=0, row=2, sticky='nsew', pady=10, padx=10)
 
     # Left Menu Frame Column Configure
     left_menu_frame.columnconfigure(0, weight=1)
@@ -422,28 +511,33 @@ def gui():
     button_width = 20
     button_pad_x = 5
 
-    # Check Repo Label
+    # Check Repo Button
     check_repo_button = tkinter.Button(left_menu_frame, text="Check Repo", width=button_width,
                                        command=lambda: check_repo_code(right_frame))
     check_repo_button.grid(padx=button_pad_x, pady=5)
 
+    # Rate Repo Button
     rate_repo_button = tkinter.Button(left_menu_frame, text="Rate Repo", width=button_width,
                                       command=lambda: rate_repo_code(right_frame))
     rate_repo_button.grid(padx=button_pad_x, pady=5)
 
+    # Add Vulnerabilities Button
     add_vulnerabilities = tkinter.Button(left_menu_frame, text=" Add Vulnerable Syntax", width=button_width,
                                          command=lambda: add_vulnerable_syntax(right_frame))
     add_vulnerabilities.grid(padx=button_pad_x, pady=5)
 
+    # Display Code Button
     display_code_button = tkinter.Button(left_menu_frame, text="Display Codes", width=button_width,
                                          command=lambda: display_code(right_frame))
     display_code_button.grid(padx=button_pad_x, pady=5)
 
-    team_info = tkinter.Button(window, text="Team Information", width=button_width)
+    # Team Information Button
+    team_info = tkinter.Button(window, text="Team Information", width=button_width,
+                               command=lambda: team_info_display(right_frame))
     team_info.grid(padx=button_pad_x, pady=5)
 
     # Welcome Label
-    welcome_label = tkinter.Label(right_frame, text='Welcome to OSS Security Inspector', font=('Arial', 20))
+    welcome_label = tkinter.Label(right_frame, text='Welcome to OSS Security Inspector', font=('Arial', 25))
     welcome_label.grid(column=0, row=0, columnspan=1, sticky='ew')
 
     # Close Button
