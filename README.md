@@ -68,3 +68,7 @@ pip3 install pillow
   - LinkedIn:- https://www.linkedin.com/in/kabir-sharma-b284261a0/
 - Yukti (Member-2)
   - LinkedIn:- https://www.linkedin.com/in/yukti-mainali/
+# Test URL
+- https://github.com/paralelo14/malware_python
+- https://github.com/ncorbuk/Python-Ransomware
+- https://github.com/pylyf/NetWorm
