@@ -16,3 +16,4 @@ tempfile, used to access temporary files, 1
 exec, Used to Execute command and can be used to run cmd or terminal Command, 2
 eval, will execute commands , 1
 compile, will execute any commands, 2
+"Software\Microsoft\Windows\CurrentVersion\Run", Helps Malware to run each time a user logs on, 3

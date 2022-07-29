@@ -287,7 +287,7 @@ def check_repo(link, frame):
     syn_max_length = len(max(vul_syn_list)) + 5
     des_max_length = len(max(vul_des_list)) + 5
     for index in range(len(vul_syn_list)):
-        text_box.insert(i, f'{vul_syn_list[index]: ^{syn_max_length}s} {vul_des_list[index]: ^{des_max_length}s}\n')
+        text_box.insert(i, f'{vul_syn_list[index]: >{syn_max_length}s}:-- {vul_des_list[index]: ^{des_max_length}s}\n')
         i = i + 1
     text_box.grid(row=0, column=0, sticky='nsew', padx=5, pady=5)
 
