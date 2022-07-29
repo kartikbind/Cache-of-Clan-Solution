@@ -82,9 +82,12 @@ def clear_frame(frame):
 def display_submit_func(frame, link):
     code = open_code(code_link_finder(dir_link_finder(link)))
     clear_frame(frame)
-    text_box = tkinter.Text(frame)
+    vertical_scrollbar = tkinter.Scrollbar(frame, orient=tkinter.VERTICAL)
+    vertical_scrollbar.grid(column=1, sticky='ns')
+    text_box = tkinter.Text(frame, yscrollcommand=vertical_scrollbar.set)
     for i in range(len(code)):
         text_box.insert(float(i + 1), code[i] + '\n')
+    vertical_scrollbar.config(command=text_box.yview)
     text_box.grid(column=0, row=0, sticky='nsew', pady=5, padx=5)
 
 
@@ -259,7 +262,7 @@ def return_vul(link):
             b.append(c)
             syn, des, rate = b[i]
             for syntax in code:
-                if syn in syntax:
+                if syn in syntax and syn not in vul_syn_list:
                     vul_syn_list.append(syn)
                     vul_des_list.append(des)
                     vul_rating_list.append(rate)
@@ -342,7 +345,7 @@ def rate_repo_code(frame):
 
     # Right frame for working palate
     right_frame = tkinter.Frame(frame)
-    right_frame.grid(sticky='n')
+    right_frame.grid(sticky='ns')
 
     # Right frame display frame column configure
     right_frame.columnconfigure(0, weight=10)
