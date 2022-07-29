@@ -406,7 +406,7 @@ def team_info_display(frame):
     leader_label.grid(row=0, column=1, sticky='N')
 
     # Leader Profile Picture
-    leader_pic = Image.open('Profile Pic.jpg')
+    leader_pic = Image.open('Images/Profile Pic.jpg')
     leader_pic = leader_pic.resize((150, 150))
     leader_pic = ImageTk.PhotoImage(leader_pic)
     leader_pic_label = tkinter.Label(frame, image=leader_pic)
@@ -432,7 +432,7 @@ def team_info_display(frame):
     leader_label.grid(row=0, column=2, sticky='N')
 
     # Member-1 Profile Picture
-    member_1_pic = Image.open('Kabir_Profile_Pic.jpeg')
+    member_1_pic = Image.open('Images/Kabir_Profile_Pic.jpeg')
     member_1_pic = member_1_pic.resize((150, 150))
     member_1_pic = ImageTk.PhotoImage(member_1_pic)
     member_1_pic_label = tkinter.Label(frame, image=member_1_pic)
@@ -458,7 +458,7 @@ def team_info_display(frame):
     leader_label.grid(row=0, column=3, sticky='N')
 
     # Member-2 Profile Picture
-    member_2_pic = Image.open('Yukti_Profile_Pic.jpeg')
+    member_2_pic = Image.open('Images/Yukti_Profile_Pic.jpeg')
     member_2_pic = member_2_pic.resize((150, 150))
     member_2_pic = ImageTk.PhotoImage(member_2_pic)
     member_2_pic_label = tkinter.Label(frame, image=member_2_pic)
@@ -509,7 +509,7 @@ def gui():
     team_name_label.grid(columnspan=3, row=0, sticky="NS", padx=5)
 
     # Image of team
-    pic = Image.open('Flipkart-GRiD-4.0.png')
+    pic = Image.open('Images/Flipkart-GRiD-4.0.png')
     pic = pic.resize((360, 200))
     pic = ImageTk.PhotoImage(pic)
     pic_label = tkinter.Label(window, image=pic)
