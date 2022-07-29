@@ -61,3 +61,14 @@ pip3 install pillow
 - Using the + button add All the Libraries wchich were not present
 - Click OK
 - Run Again
+# Team Member
+- Kartik Bind (Leader)
+  - LinkedIn:- https://www.linkedin.com/in/kartik-bind/
+- Kabir Sharma (Member-1)
+  - LinkedIn:- https://www.linkedin.com/in/kabir-sharma-b284261a0/
+- Yukti (Member-2)
+  - LinkedIn:- https://www.linkedin.com/in/yukti-mainali/
+# Test URL
+- https://github.com/paralelo14/malware_python
+- https://github.com/ncorbuk/Python-Ransomware
+- https://github.com/pylyf/NetWorm
