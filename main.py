@@ -32,6 +32,7 @@ def code_link_finder(url_list: list):
         repo_link_protocol = url[:8]
         link_divide = url.split("/")
         domain_name = link_divide[2]
+        repo_name = f'/{link_divide[3]}/{link_divide[4]}'
         soup = BeautifulSoup(req.content, "html.parser")
         code_extensions = [".py", ".c++", ".java", "json", ".c"]
 
@@ -45,11 +46,15 @@ def code_link_finder(url_list: list):
                         if href[0:4] == "href":
                             link_1 = href[6:-1]
                             code_links.append(repo_link_protocol + domain_name + link_1)
-
+        for link_2 in code_links:
+            if f'{repo_link_protocol + domain_name + repo_name}/blob/master/' in link_2:
+                pass
+            else:
+                code_links.remove(link_2)
     return code_links
 
 
-def open_code(code_link_list: list):
+def open_code(code_link_list: list):    # will receive Code links from code_link_finder function
     program = []
     for code_link in code_link_list:
         req = requests.get(code_link)
@@ -81,6 +86,7 @@ def clear_frame(frame):
 # Function to Display all the Code in the Repo
 def display_submit_func(frame, link):
     code = open_code(code_link_finder(dir_link_finder(link)))
+    vul_syn_list, vul_des_list, vul_rating_list = return_vul(link)
     clear_frame(frame)
     vertical_scrollbar = tkinter.Scrollbar(frame, orient=tkinter.VERTICAL)
     vertical_scrollbar.grid(column=1, sticky='ns')
@@ -89,6 +95,10 @@ def display_submit_func(frame, link):
         text_box.insert(float(i + 1), code[i] + '\n')
     vertical_scrollbar.config(command=text_box.yview)
     text_box.grid(column=0, row=0, sticky='nsew', pady=5, padx=5)
+    # Rate Repo Button
+    rate_button = tkinter.Button(frame, text='Rate Repo',
+                                 command=lambda: rate_repo_submit(frame, vul_rating_list))
+    rate_button.grid(row=1, column=0, sticky='s')
 
 
 # Function which take GitHub URl as input for displaying the Code in the Repo
