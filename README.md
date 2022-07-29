@@ -72,3 +72,6 @@ pip3 install pillow
 - https://github.com/paralelo14/malware_python
 - https://github.com/ncorbuk/Python-Ransomware
 - https://github.com/pylyf/NetWorm
+# Limitation
+- Can detect Vulnerabilities in Python only
+- In URL Entry Box kindly enter valid GitHub Repo URLs
