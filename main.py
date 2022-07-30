@@ -34,7 +34,7 @@ def code_link_finder(url_list: list):
         domain_name = link_divide[2]
         repo_name = f'/{link_divide[3]}/{link_divide[4]}'
         soup = BeautifulSoup(req.content, "html.parser")
-        code_extensions = [".py", ".c++", ".java", "json", ".c"]
+        code_extensions = [".py", ".cpp", ".java", "json", ".c"]
 
         all_hyperlink_tags = soup.find_all('a')
         for hyperlink_tag in all_hyperlink_tags:
