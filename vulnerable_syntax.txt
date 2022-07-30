@@ -4,7 +4,6 @@ NMap, Network Scanner Tool, 2
 twisted, Network Scanner Tool, 2
 scapy, Packet Processing Decoding Forging and Analysing Packet Information, 3
 YARA, Malware Identification, 3
-Cryptography, Implementing cryptographic Algorithm, 2
 python-NMap, Network Scanner Tool, 2
 pylibnet, Packet Injection and Frame Sniffing, 3
 impacket, work with Network Protocol and provide Low-Level programmatic Access, 3
@@ -18,3 +17,5 @@ eval, will execute commands , 1
 compile, will execute any commands, 2
 "Software\Microsoft\Windows\CurrentVersion\Run", Helps Malware to run each time a user logs on, 3
 subprocess, To create process for notepad and open attacks, 3
+win32gui, To check for attack program on top of all other window, 2
+cryptography, To encrypt or decrypt files on target system, 3
