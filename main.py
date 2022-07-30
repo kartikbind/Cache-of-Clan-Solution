@@ -54,7 +54,7 @@ def code_link_finder(url_list: list):
     return code_links
 
 
-def open_code(code_link_list: list):    # will receive Code links from code_link_finder function
+def open_code(code_link_list: list):  # will receive Code links from code_link_finder function
     program = []
     for code_link in code_link_list:
         req = requests.get(code_link)
@@ -170,7 +170,7 @@ def add_vulnerable_syntax(frame):
 
     # title label and all functionality widgets
     title_label = tkinter.Label(right_frame, text='Add Vulnerable Syntax', font=('Arial', 20))
-    title_label.grid(row=0, column=0, columnspan=2,sticky='ew', pady=5, padx=5)
+    title_label.grid(row=0, column=0, columnspan=2, sticky='ew', pady=5, padx=5)
 
     # Form Frame
     form_frame = tkinter.Frame(right_frame)
@@ -289,39 +289,46 @@ def check_repo(link, frame):
     # Clear the Frame
     clear_frame(frame)
 
-    # Text Box for Vulnerabilities
-    text_box = tkinter.Text(frame, font=('Arial', 15))
-    text_box.insert(1.0, f'Following are the Vulnerabilities in the {link} Repo\n')
-    text_box.insert(2.0, '\n')
-    i = 3.0
-    syn_max_length = len(max(vul_syn_list)) + 5
-    des_max_length = len(max(vul_des_list)) + 5
-    for index in range(len(vul_syn_list)):
-        text_box.insert(i, f'{vul_syn_list[index]: >{syn_max_length}s}:-- {vul_des_list[index]: ^{des_max_length}s}\n')
-        i = i + 1
-    text_box.grid(row=0, column=0, sticky='nsew', padx=5, pady=5)
+    if len(vul_syn_list) == 0:
+        zero_vul_label = tkinter.Label(frame, text="The Repo is safe and have Zero Vulnerabilities", fg='green',
+                                       font=('Arial', 20))
+        zero_vul_label.grid()
+    else:
+        # Text Box for Vulnerabilities
+        text_box = tkinter.Text(frame, font=('Arial', 15))
+        text_box.insert(1.0, f'Following are the Vulnerabilities in the {link} Repo\n')
+        text_box.insert(2.0, '\n')
+        i = 3.0
+        syn_max_length = len(max(vul_syn_list)) + 5
+        des_max_length = len(max(vul_des_list)) + 5
+        for index in range(len(vul_syn_list)):
+            text_box.insert(i, f'{vul_syn_list[index]: >{syn_max_length}s}:-- {vul_des_list[index]: ^{des_max_length}s}\n')
+            i = i + 1
+        text_box.grid(row=0, column=0, sticky='nsew', padx=5, pady=5)
 
-    # Rate Repo Button
-    rate_button = tkinter.Button(frame, text='Rate Repo',
-                                 command=lambda: rate_repo_submit(frame, vul_rating_list))
-    rate_button.grid(row=1, column=0, sticky='s')
+        # Rate Repo Button
+        rate_button = tkinter.Button(frame, text='Rate Repo',
+                                     command=lambda: rate_repo_submit(frame, vul_rating_list))
+        rate_button.grid(row=1, column=0, sticky='s')
 
 
 # Function which show the Rating the for the Repo
 def rate_repo_submit(frame, rating_list):
-    rate = 0.0
-    for r in rating_list:
-        rate = rate + int(r)
-    rate = float(rate/len(rating_list))
-    if rate == 0.0:
-        rate_label = tkinter.Label(frame, text="The Repo is safe and have Zero Vulnerabilities", font=('Arial', 20))
+    if len(rating_list) == 0:
+        rate_label = tkinter.Label(frame, text="The Repo is safe and have Zero Vulnerabilities", fg='green',
+                                   font=('Arial', 20))
         rate_label.grid()
     else:
+        rate = 0.0
+        for r in rating_list:
+            rate = rate + int(r)
+        rate = float(rate / len(rating_list))
         rate_value = (rate / 3.0) * 100
         lower_frame = tkinter.Frame(frame)
         lower_frame.grid(sticky='s')
         # Rate Heading
-        rate_label_heading = tkinter.Label(lower_frame, text="The Repo have Vulnerabilities", font=('Arial', 20), fg='red')
+        rate_label_heading = tkinter.Label(lower_frame, text="The Repo have Vulnerabilities", font=('Arial', 20),
+                                           fg='red')
         rate_label_heading.grid(row=0, column=0, sticky='n', columnspan=3)
 
         # Label to Show the rating
@@ -331,7 +338,8 @@ def rate_repo_submit(frame, rating_list):
         # Progress bar
         good_label = tkinter.Label(lower_frame, text='Good: 0', fg='green')
         good_label.grid(row=2, column=0)
-        progress_bar = Progressbar(lower_frame, orient=tkinter.HORIZONTAL, length=300, mode='determinate', value=rate_value)
+        progress_bar = Progressbar(lower_frame, orient=tkinter.HORIZONTAL, length=300, mode='determinate',
+                                   value=rate_value)
         progress_bar.grid(row=2, column=1, sticky='n')
         bad_label = tkinter.Label(lower_frame, text='Bad: 3', fg='red')
         bad_label.grid(row=2, column=2)
